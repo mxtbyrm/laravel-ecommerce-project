@@ -2,6 +2,8 @@
 
 A simple e-commerce web application built with **Laravel**, **Bootstrap 5**, and **PostgreSQL**.
 
+**Author:** MAKSUD AHMED BAYRAM — 20232022950
+
 ## Features
 
 - Product catalog with search and pagination
