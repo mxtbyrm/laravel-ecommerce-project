@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
     protected $fillable = [
+        'category_id',
         'name',
         'slug',
         'description',
@@ -32,6 +34,11 @@ class Product extends Model
                 $product->slug = Str::slug($product->name).'-'.Str::random(6);
             }
         });
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function getRouteKeyName(): string

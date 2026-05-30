@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -10,9 +11,12 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
+        $categories = Category::pluck('id', 'slug');
+
         $products = [
             [
                 'name' => 'Classic White T-Shirt',
+                'category' => 'clothing',
                 'description' => 'A soft, breathable 100% cotton tee that goes with everything.',
                 'price' => 19.99,
                 'stock' => 120,
@@ -20,6 +24,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Denim Jacket',
+                'category' => 'clothing',
                 'description' => 'Timeless denim jacket with a relaxed fit and sturdy stitching.',
                 'price' => 79.90,
                 'stock' => 40,
@@ -27,6 +32,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Running Sneakers',
+                'category' => 'footwear',
                 'description' => 'Lightweight sneakers with cushioned soles for all-day comfort.',
                 'price' => 99.00,
                 'stock' => 60,
@@ -34,6 +40,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Leather Wallet',
+                'category' => 'accessories',
                 'description' => 'Genuine leather bifold wallet with RFID protection.',
                 'price' => 34.50,
                 'stock' => 75,
@@ -41,6 +48,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Wireless Headphones',
+                'category' => 'electronics',
                 'description' => 'Over-ear headphones with active noise cancellation and 30h battery.',
                 'price' => 149.99,
                 'stock' => 25,
@@ -48,6 +56,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Stainless Water Bottle',
+                'category' => 'accessories',
                 'description' => 'Insulated 750ml bottle that keeps drinks cold for 24 hours.',
                 'price' => 24.00,
                 'stock' => 200,
@@ -55,6 +64,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Canvas Backpack',
+                'category' => 'accessories',
                 'description' => 'Durable everyday backpack with a padded laptop compartment.',
                 'price' => 59.95,
                 'stock' => 50,
@@ -62,20 +72,61 @@ class ProductSeeder extends Seeder
             ],
             [
                 'name' => 'Analog Wristwatch',
+                'category' => 'accessories',
                 'description' => 'Minimalist wristwatch with a stainless steel mesh band.',
                 'price' => 129.00,
                 'stock' => 30,
                 'image' => 'https://picsum.photos/seed/watch/600/400',
             ],
+            [
+                'name' => 'Bluetooth Speaker',
+                'category' => 'electronics',
+                'description' => 'Portable speaker with deep bass and 12-hour playtime.',
+                'price' => 69.99,
+                'stock' => 45,
+                'image' => 'https://picsum.photos/seed/speaker/600/400',
+            ],
+            [
+                'name' => 'Leather Sneakers',
+                'category' => 'footwear',
+                'description' => 'Premium leather sneakers with a minimalist design.',
+                'price' => 119.00,
+                'stock' => 35,
+                'image' => 'https://picsum.photos/seed/leathershoe/600/400',
+            ],
+            [
+                'name' => 'Wool Beanie',
+                'category' => 'clothing',
+                'description' => 'Warm knitted beanie for cold days.',
+                'price' => 14.99,
+                'stock' => 90,
+                'image' => 'https://picsum.photos/seed/beanie/600/400',
+            ],
+            [
+                'name' => 'Sunglasses',
+                'category' => 'accessories',
+                'description' => 'UV-protected polarized sunglasses with a classic frame.',
+                'price' => 44.00,
+                'stock' => 70,
+                'image' => 'https://picsum.photos/seed/sunglasses/600/400',
+            ],
         ];
 
         foreach ($products as $data) {
+            $slug = Str::slug($data['name']);
+
             Product::updateOrCreate(
-                ['slug' => Str::slug($data['name'])],
-                array_merge($data, [
-                    'slug' => Str::slug($data['name']),
+                ['slug' => $slug],
+                [
+                    'category_id' => $categories[$data['category']] ?? null,
+                    'name' => $data['name'],
+                    'slug' => $slug,
+                    'description' => $data['description'],
+                    'price' => $data['price'],
+                    'stock' => $data['stock'],
+                    'image' => $data['image'],
                     'is_active' => true,
-                ])
+                ]
             );
         }
     }
