@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Render pagination links with Bootstrap 5 markup instead of Tailwind.
         Paginator::useBootstrapFive();
+
+        // @active('route.name') -> outputs "active" when the current route matches.
+        Blade::directive('active', fn ($pattern) => "<?php echo request()->routeIs($pattern) ? 'active' : ''; ?>");
     }
 }

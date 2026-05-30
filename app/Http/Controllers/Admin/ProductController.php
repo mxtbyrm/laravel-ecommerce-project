@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,21 +13,22 @@ class ProductController extends Controller
 {
     public function index(): View
     {
-        $products = Product::latest()->paginate(15);
+        $products = Product::with('category')->latest()->paginate(15);
 
         return view('admin.products.index', ['products' => $products]);
     }
 
     public function create(): View
     {
-        return view('admin.products.create', ['product' => new Product()]);
+        return view('admin.products.create', [
+            'product' => new Product(),
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $this->validateProduct($request);
-
-        Product::create($data);
+        Product::create($this->validateProduct($request));
 
         return redirect()->route('admin.products.index')
             ->with('status', 'Product created.');
@@ -34,14 +36,15 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
-        return view('admin.products.edit', ['product' => $product]);
+        return view('admin.products.edit', [
+            'product' => $product,
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
     public function update(Request $request, Product $product): RedirectResponse
     {
-        $data = $this->validateProduct($request);
-
-        $product->update($data);
+        $product->update($this->validateProduct($request));
 
         return redirect()->route('admin.products.index')
             ->with('status', 'Product updated.');
@@ -61,6 +64,7 @@ class ProductController extends Controller
     private function validateProduct(Request $request): array
     {
         $validated = $request->validate([
+            'category_id' => ['nullable', 'exists:categories,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'price' => ['required', 'numeric', 'min:0'],

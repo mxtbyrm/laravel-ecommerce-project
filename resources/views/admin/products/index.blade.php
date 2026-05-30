@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Admin · Products')
+@section('title', 'Products')
+@section('heading', 'Products')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">Manage Products</h1>
-    <a href="{{ route('admin.products.create') }}" class="btn btn-dark">
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg"></i> New product
     </a>
 </div>
@@ -20,6 +20,7 @@
                     <tr>
                         <th></th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th class="text-end">Price</th>
                         <th class="text-end">Stock</th>
                         <th>Status</th>
@@ -33,7 +34,14 @@
                                 <img src="{{ $product->image ?: 'https://placehold.co/48x48?text=—' }}"
                                      alt="" width="48" height="48" class="rounded" style="object-fit: cover;">
                             </td>
-                            <td>{{ $product->name }}</td>
+                            <td class="fw-semibold">{{ $product->name }}</td>
+                            <td>
+                                @if ($product->category)
+                                    <span class="badge bg-info-subtle text-info-emphasis">{{ $product->category->name }}</span>
+                                @else
+                                    <span class="text-muted small">—</span>
+                                @endif
+                            </td>
                             <td class="text-end">${{ number_format($product->price, 2) }}</td>
                             <td class="text-end">{{ $product->stock }}</td>
                             <td>
