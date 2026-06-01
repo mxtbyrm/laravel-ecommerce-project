@@ -11,7 +11,7 @@
 <body class="d-flex flex-column min-vh-100 bg-body-tertiary">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ route('products.index') }}">
+            <a class="navbar-brand fw-bold" href="{{ route('home') }}">
                 <i class="bi bi-bag-heart-fill me-1"></i>{{ config('app.name') }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
@@ -20,12 +20,15 @@
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('products.index') }}">Shop</a>
                     </li>
                     @auth
                         @if (auth()->user()->is_admin)
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.products.index') }}">Admin</a>
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a>
                             </li>
                         @endif
                         <li class="nav-item">

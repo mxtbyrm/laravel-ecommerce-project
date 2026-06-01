@@ -6,6 +6,11 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Shop</a></li>
+        @if ($product->category)
+            <li class="breadcrumb-item">
+                <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
+            </li>
+        @endif
         <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
     </ol>
 </nav>
@@ -16,6 +21,10 @@
              class="img-fluid rounded shadow-sm w-100" alt="{{ $product->name }}" style="object-fit: cover;">
     </div>
     <div class="col-md-6">
+        @if ($product->category)
+            <a href="{{ route('products.index', ['category' => $product->category->slug]) }}"
+               class="badge bg-info-subtle text-info-emphasis text-decoration-none mb-2">{{ $product->category->name }}</a>
+        @endif
         <h1 class="h3">{{ $product->name }}</h1>
         <p class="display-6 fw-bold">${{ number_format($product->price, 2) }}</p>
 
@@ -40,4 +49,29 @@
         </form>
     </div>
 </div>
+
+@if ($related->isNotEmpty())
+    <hr class="my-5">
+    <h2 class="h4 mb-3">You might also like</h2>
+    <div class="row row-cols-2 row-cols-lg-4 g-4">
+        @foreach ($related as $item)
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <a href="{{ route('products.show', $item) }}">
+                        <img src="{{ $item->image ?: 'https://placehold.co/600x400?text=No+Image' }}"
+                             class="card-img-top" alt="{{ $item->name }}" style="height: 150px; object-fit: cover;">
+                    </a>
+                    <div class="card-body">
+                        <h3 class="h6 mb-1">
+                            <a href="{{ route('products.show', $item) }}" class="text-decoration-none text-dark stretched-link">
+                                {{ $item->name }}
+                            </a>
+                        </h3>
+                        <span class="fw-bold">${{ number_format($item->price, 2) }}</span>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endif
 @endsection
